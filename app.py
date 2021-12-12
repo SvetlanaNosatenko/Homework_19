@@ -27,6 +27,7 @@ def register_extensions(app):
 
 def create_data(app, db):
     with app.app_context():
+        db.drop_all()
         db.create_all()
 
         u1 = User(username="vasya", password="my_little_pony", role="user")
