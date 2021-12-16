@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restx import Api
 
+from auth import auth_ns
 from config import Config
 from dao.model.user import User
 from setup_db import db
@@ -24,6 +25,7 @@ def register_extensions(app):
     api.add_namespace(genre_ns)
     api.add_namespace(movie_ns)
     api.add_namespace(user_ns)
+    api.add_namespace(auth_ns)
     create_data(app, db)
 
 

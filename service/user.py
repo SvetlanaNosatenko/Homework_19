@@ -20,7 +20,7 @@ class UserService:
         self.dao.update(user_d)
         return self.dao
 
-    def get_hash(self, password):
+    def get_hash(password):
         return hashlib.pbkdf2_hmac(
             'sha256',
             password.encode('utf-8'),  # Convert the password to bytes

@@ -61,8 +61,8 @@ class AuthView(Resource):
         if user is None:
             return {"error": "Неверные учётные данные"}, 401
 
-        # password_hash = hashlib.md5(password.encode('utf-8')).hexdigest()
-        password_hash = hashlib.pbkdf2_hmac(algo, password.encode(), PWD_HASH_SALT, PWD_HASH_ITERATIONS)
+        password_hash = hashlib.md5(password.encode('utf-8')).hexdigest()
+        # password_hash = hashlib.pbkdf2_hmac(algo, password.encode(), PWD_HASH_SALT, PWD_HASH_ITERATIONS)
 
         if password_hash != user.password:
             return {"error": "Неверные учётные данные"}, 401
