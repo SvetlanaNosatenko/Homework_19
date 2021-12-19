@@ -3,12 +3,16 @@ from flask_restx import Api
 
 from auth import auth_ns
 from config import Config
+from dao.model.director import Director
+from dao.model.genre import Genre
+from dao.model.movie import Movie
 from dao.model.user import User
 from setup_db import db
 from views.directors import director_ns
 from views.genres import genre_ns
 from views.movies import movie_ns
 from views.users import user_ns
+from data import data
 
 
 def create_app(config_object):
@@ -26,20 +30,6 @@ def register_extensions(app):
     api.add_namespace(movie_ns)
     api.add_namespace(user_ns)
     api.add_namespace(auth_ns)
-    create_data(app, db)
-
-
-def create_data(app, db):
-    with app.app_context():
-        db.drop_all()
-        db.create_all()
-
-        u1 = User(username="vasya", password="my_little_pony", role="user")
-        u2 = User(username="oleg", password="qwerty", role="user")
-        u3 = User(username="oleg", password="P@ssw0rd", role="admin")
-
-        with db.session.begin():
-            db.session.add_all([u1, u2, u3])
 
 
 app = create_app(Config())
