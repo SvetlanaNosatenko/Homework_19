@@ -1,4 +1,5 @@
 from app import app
+from dao.model.user import User
 from data import data
 from setup_db import db
 from dao.model.director import Director
@@ -11,7 +12,7 @@ with app.app_context():
 
     u1 = User(username="vasya", password="my_little_pony", role="user")
     u2 = User(username="oleg", password="qwerty", role="user")
-    u3 = User(username="oleg", password="P@ssw0rd", role="admin")
+    u3 = User(username="oleg1", password="P@ssw0rd", role="admin")
 
     with db.session.begin():
         db.session.add_all([u1, u2, u3])

@@ -8,6 +8,7 @@ from flask import abort, request
 import jwt
 from constants import *
 from dao.model.user import User
+from implemented import user_service
 from setup_db import db
 
 auth_ns = Namespace('auth')
@@ -52,25 +53,25 @@ def admin_required(func):
 class AuthView(Resource):
     def post(self):
         req_json = request.json
-        user = req_json.get('username')
-        password = req_json.get('password')
+        user = req_json.get('username', None)
+        password = req_json.get('password', None)
 
         if None in [user, password]:
             abort(400)
 
-        user = db.session.query(User).filter(User.username == user).all()
+        user = db.session.query(User).filter(User.username == user).first()
+
         if user is None:
             return {"error": "Неверные учётные данные"}, 401
 
-        password_hash = base64.b64encode(hashlib.pbkdf2_hmac(algo, password.encode('utf-8'), PWD_HASH_SALT,
-                                                             PWD_HASH_ITERATIONS))
+        compare = user_service.compare_passwords(password_hash=user.password, password=password)
 
-        if password_hash != user.password:
+        if not compare:
             return {"error": "Неверные учётные данные"}, 401
 
         data = {
-            "username": user.get('username'),
-            "password": password.get('password')
+            "username": user.username,
+            "role": user.role
         }
         min30 = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
         data["exp"] = calendar.timegm(min30.timetuple())
@@ -93,7 +94,6 @@ class AuthView(Resource):
         user = db.session.query(User).filter(User.username == username).first()
 
         data = {"username": user.username,
-                "password": user.password,
                 "role": user.role
                 }
         min30 = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
