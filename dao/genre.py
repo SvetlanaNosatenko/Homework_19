@@ -17,8 +17,8 @@ class GenreDAO:
         self.session.commit()
         return ent
 
-    def delete(self, rid):
-        genre = self.get_one(rid)
+    def delete(self, bid):
+        genre = self.get_one(bid)
         self.session.delete(genre)
         self.session.commit()
 

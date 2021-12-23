@@ -24,10 +24,10 @@ class GenresView(Resource):
         return "", 201, {"location": f"/genres/{genre.id}"}
 
 
-@genre_ns.route('/<int:rid>')
+@genre_ns.route('/<int:bid>')
 class GenreView(Resource):
     @auth_required
-    def get(self, rid):
+    def get(self, bid):
         r = genre_service.get_one(rid)
         sm_d = GenreSchema().dump(r)
         return sm_d, 200

@@ -1,5 +1,5 @@
 PWD_HASH_SALT = b'249y823r9v8238r9u'
 PWD_HASH_ITERATIONS = 100000
 secret = '249y823r9v8238r9u'
-algo = "SHA256"
+algo = "HS256"
 
