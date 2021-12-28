@@ -17,6 +17,10 @@ class UserDAO:
         self.session.commit()
         return ent
 
+    def auth_user(self, username):
+        user = self.session.query(User).filter(User.username == username).first()
+        return user
+
     def delete(self, rid):
         user = self.get_one(rid)
         self.session.delete(user)

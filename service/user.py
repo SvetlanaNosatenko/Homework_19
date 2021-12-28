@@ -1,9 +1,13 @@
 import base64
 import hashlib
 import hmac
+import calendar
+import datetime
+
+import jwt
 
 from dao.user import UserDAO
-from constants import PWD_HASH_SALT, PWD_HASH_ITERATIONS
+from constants import PWD_HASH_SALT, PWD_HASH_ITERATIONS, secret, algo
 
 
 class UserService:
@@ -39,6 +43,17 @@ class UserService:
             hashlib.pbkdf2_hmac('sha256', password.encode(), PWD_HASH_SALT, PWD_HASH_ITERATIONS)
         )
 
+    def auth_user(self, username):
+        return self.dao.auth_user(username)
+
+    def get_token(self, data):
+        min30 = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+        data["exp"] = calendar.timegm(min30.timetuple())
+        access_token = jwt.encode(data, secret, algorithm=algo)
+        days130 = datetime.datetime.utcnow() + datetime.timedelta(days=130)
+        data["exp"] = calendar.timegm(days130.timetuple())
+        refresh_token = jwt.encode(data, secret, algorithm=algo)
+        return {"access_token": access_token, "refresh_token": refresh_token}
 
 
 
